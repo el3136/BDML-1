@@ -7,7 +7,7 @@ from transformers import (
     AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig
 )
 from peft import get_peft_model, LoraConfig, TaskType
-from datasets import Dataset
+from datasets import load_dataset
 
 # ================== 1. PREPROCESSING STEP ==================
 
@@ -32,13 +32,23 @@ random.shuffle(pdf_files)
 split_index = int(len(pdf_files) * 0.9)
 train_sets, test_sets = pdf_files[:split_index], pdf_files[split_index:]
 
-# Convert PDFs to text
-def create_dataset(file_paths):
-    texts = [extract_text_from_pdf(pdf) for pdf in file_paths]
-    return Dataset.from_dict({"text": texts})
+def extract_text_to_temp_files(pdf_paths):
+    """Extracts text from PDFs and writes them to temporary text files."""
+    temp_files = []
+    for pdf in pdf_paths:
+        text = extract_text_from_pdf(pdf)
+        temp_file = pdf + ".txt"
+        with open(temp_file, "w") as f:
+            f.write(text)
+        temp_files.append(temp_file)
+    return temp_files
 
-train_dataset = create_dataset(train_sets)
-eval_dataset = create_dataset(test_sets)
+train_txt_files = extract_text_to_temp_files(train_sets)
+test_txt_files = extract_text_to_temp_files(test_sets)
+
+train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
+eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
+
 
 # ================== 2. TRAINING STEP ==================
 
@@ -80,8 +90,8 @@ lora_model.print_trainable_parameters()
 # Define training arguments
 training_args = TrainingArguments(
     output_dir="/scratch/el3136/your-finetuned-llama",
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=4,
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=8,
     optim="adamw_torch",
     fp16=True,
     bf16=False,
@@ -119,6 +129,6 @@ def compute_perplexity(model_path, text):
     return math.exp(loss)
 
 # Evaluate on a sample text from the test set
-eval_text = extract_text_from_pdf(test_sets[0])  # Using first test PDF
+eval_text = next(iter(eval_dataset))["text"]  # Using first test PDF
 perplexity = compute_perplexity("/scratch/el3136/your-finetuned-llama", eval_text)
 print(f"Perplexity: {perplexity:.2f}")
