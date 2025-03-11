@@ -2,7 +2,7 @@ import os
 import random
 import torch
 import math
-from PyPDF2 import PdfReader
+import pdfplumber
 from transformers import (
     AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig
 )
@@ -12,9 +12,13 @@ from datasets import Dataset
 # ================== 1. PREPROCESSING STEP ==================
 
 def extract_text_from_pdf(pdf_path):
-    """Extracts and preprocesses text from a PDF file."""
-    reader = PdfReader(pdf_path)
-    text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+    """Extracts and preprocesses text from a PDF file using pdfplumber."""
+    text = ""
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
+    except Exception as e:
+        print(f"Error reading {pdf_path}: {e}")
     return text.strip()
 
 # Define the directory containing PDFs
