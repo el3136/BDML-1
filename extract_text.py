@@ -35,6 +35,7 @@ def extract_text_to_temp_files(pdf_paths):
         with open(temp_file, "w") as f:
             f.write(text)
         temp_files.append(temp_file)
+        print(temp_file)
     return temp_files
 
 train_txt_files = extract_text_to_temp_files(train_sets)
