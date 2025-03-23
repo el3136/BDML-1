@@ -42,7 +42,7 @@ train_txt_files = extract_text_to_temp_files(train_sets)
 test_txt_files = extract_text_to_temp_files(test_sets)
 
 # Save the list of generated text file paths
-with open("train_txt_files.txt", "w") as f:
+with open("/scratch/el3136/BDML-1/train_txt_files.txt", "w") as f:
     f.write("\n".join(train_txt_files))
-with open("test_txt_files.txt", "w") as f:
+with open("/scratch/el3136/BDML-1/test_txt_files.txt", "w") as f:
     f.write("\n".join(test_txt_files))

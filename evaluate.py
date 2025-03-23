@@ -5,7 +5,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from datasets import load_dataset
 
 # Load testing text file paths
-with open("test_txt_files.txt", "r") as f:
+with open("/scratch/el3136/BDML-1/test_txt_files.txt", "r") as f:
     test_txt_files = f.read().splitlines()
 
 eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)

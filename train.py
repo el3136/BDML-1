@@ -7,7 +7,7 @@ from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 
 # Load training text file paths
-with open("train_txt_files.txt", "r") as f:
+with open("/scratch/el3136/BDML-1/train_txt_files.txt", "r") as f:
     train_txt_files = f.read().splitlines()
 
 train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
