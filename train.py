@@ -5,12 +5,35 @@ from transformers import (
 )
 from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
+import random
 
-# Load training text file paths
+# Define the directory containing txts
+directory = "/scratch/el3136/climate_text_dataset"
+txt_files = sorted(
+    [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".txt")]
+)
+
+# Shuffle and split into 90% training and 10% testing
+# random.seed(42)  # Ensures consistent splits
+random.shuffle(txt_files)
+split_index = int(len(txt_files) * 0.9)
+train_sets, test_sets = txt_files[:split_index], txt_files[split_index:]
+
+# Save the list of generated text file paths
+with open("/scratch/el3136/BDML-1/train_txt_files.txt", "w") as f:
+    f.write("\n".join(train_sets))
+with open("/scratch/el3136/BDML-1/test_txt_files.txt", "w") as f:
+    f.write("\n".join(test_sets))
+
+# Load training and testing text file paths
 with open("/scratch/el3136/BDML-1/train_txt_files.txt", "r") as f:
     train_txt_files = f.read().splitlines()
+with open("/scratch/el3136/BDML-1/test_txt_files.txt", "r") as f:
+    test_txt_files = f.read().splitlines()
 
+# Load training and evaluation datasets
 train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
+eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
 
 # ================== TRAINING STEP ==================
 
