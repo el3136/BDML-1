@@ -64,7 +64,7 @@ quantization_config = BitsAndBytesConfig(
 )
 
 # Load quantized model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config)
+model = AutoModelForCausalLM.from_pretrained(model_name, config=config, quantization_config=quantization_config)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # Ensure tokenizer padding side for causal LM
