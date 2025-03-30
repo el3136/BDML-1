@@ -40,6 +40,22 @@ eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
 # Define model path
 model_name = "/scratch/BDML25SP/Llama3.2-3B/"
 
+# Manually create the configuration object
+config = PretrainedConfig(
+    model_type="llama",  # Specify the model type
+    architectures=["LlamaForCausalLM"],  # Specify the architecture
+    dim=3072,
+    ffn_dim_multiplier=1.0,
+    multiple_of=256,
+    n_heads=24,
+    n_kv_heads=8,
+    n_layers=28,
+    norm_eps=1e-05,
+    rope_theta=500000.0,
+    use_scaled_rope=True,
+    vocab_size=128256
+)
+
 # Enable 4-bit quantization
 quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
