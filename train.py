@@ -1,7 +1,7 @@
 import os
 import torch
 from transformers import (
-    AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig
+    AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig, PretrainedConfig
 )
 from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
@@ -64,7 +64,7 @@ quantization_config = BitsAndBytesConfig(
 )
 
 # Load quantized model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config, model_type="llama")
+model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # Ensure tokenizer padding side for causal LM
