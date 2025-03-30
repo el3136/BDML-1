@@ -1,7 +1,7 @@
 import os
 import torch
 from transformers import (
-    AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig, PretrainedConfig
+    AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, BitsAndBytesConfig, PretrainedConfig, LlamaConfig
 )
 from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
@@ -55,6 +55,9 @@ config = PretrainedConfig(
     use_scaled_rope=True,
     vocab_size=128256
 )
+
+# Load the correct model configuration for LLaMA
+config = LlamaConfig.from_pretrained(model_name)
 
 # Enable 4-bit quantization
 quantization_config = BitsAndBytesConfig(
