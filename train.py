@@ -38,7 +38,7 @@ eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
 # ================== TRAINING STEP ==================
 
 # Define model path
-model_name = "/scratch/BDML25SP/Llama3.2-3B"
+model_name = "/scratch/BDML25SP/Llama3.2-3B/"
 
 # Enable 4-bit quantization
 quantization_config = BitsAndBytesConfig(
