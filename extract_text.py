@@ -31,11 +31,15 @@ def extract_text_to_temp_files(pdf_paths):
     temp_files = []
     for pdf in pdf_paths:
         text = extract_text_from_pdf(pdf)
-        temp_file = pdf + ".txt"
-        with open(temp_file, "w") as f:
-            f.write(text)
-        temp_files.append(temp_file)
-        print(temp_file)
+        if text:  # Only save non-empty text files
+            temp_file = pdf + ".txt"
+            with open(temp_file, "w") as f:
+                f.write(text)
+            temp_files.append(temp_file)
+            print(f"Saved: {temp_file}")
+        
+        # Remove large variables from memory
+        del text
     return temp_files
 
 train_txt_files = extract_text_to_temp_files(train_sets)
