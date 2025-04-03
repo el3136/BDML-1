@@ -14,7 +14,7 @@ txt_files = sorted(
 )
 
 # Shuffle and split into 90% training and 10% testing
-# random.seed(42)  # Ensures consistent splits
+random.seed(42)  # Ensures consistent splits
 random.shuffle(txt_files)
 split_index = int(len(txt_files) * 0.9)
 train_sets, test_sets = txt_files[:split_index], txt_files[split_index:]
@@ -31,9 +31,12 @@ with open("/scratch/el3136/BDML-1/train_txt_files.txt", "r") as f:
 with open("/scratch/el3136/BDML-1/test_txt_files.txt", "r") as f:
     test_txt_files = f.read().splitlines()
 
-# Load training and evaluation datasets
-train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
-eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
+# Load training and evaluation datasets (streaming for large files)
+# train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
+# eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
+# Load train and test datasets (if each .txt file has one example per line)
+train_dataset = load_dataset("text", data_files=train_txt_files)
+eval_dataset = load_dataset("text", data_files=test_txt_files)
 
 # ================== TRAINING STEP ==================
 
