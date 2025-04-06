@@ -8,7 +8,7 @@ from datasets import load_dataset
 with open("/scratch/el3136/BDML-1/test_txt_files.txt", "r") as f:
     test_txt_files = f.read().splitlines()
 
-eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
+eval_dataset = load_dataset("text", data_files={"test": test_txt_files})["test"]
 
 # ================== EVALUATION STEP ==================
 
