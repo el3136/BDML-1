@@ -92,6 +92,11 @@ lora_config = LoraConfig(
 
 # Apply LoRA
 lora_model = get_peft_model(model, lora_config)
+
+# Ensure that all parameters are set to require gradients
+for param in lora_model.parameters():
+    param.requires_grad = True 
+
 lora_model.print_trainable_parameters()
 
 # Define training arguments
