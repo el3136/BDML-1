@@ -96,6 +96,7 @@ trainer = Trainer(
     model=lora_model,
     args=training_args,
     train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
     tokenizer=tokenizer,
 )
 
