@@ -93,9 +93,10 @@ lora_config = LoraConfig(
 # Apply LoRA
 lora_model = get_peft_model(model, lora_config)
 
-# Ensure that all parameters are set to require gradients
+# Ensure that only float-type parameters require gradients
 for param in lora_model.parameters():
-    param.requires_grad = True 
+    if param.dtype in [torch.float32, torch.float16, torch.float64]:  # Check for float-type parameters
+        param.requires_grad = True 
 
 lora_model.print_trainable_parameters()
 
