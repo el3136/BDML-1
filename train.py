@@ -35,8 +35,11 @@ with open("/scratch/el3136/BDML-1/test_txt_files.txt", "r") as f:
 # train_dataset = load_dataset("text", data_files=train_txt_files, streaming=True)
 # eval_dataset = load_dataset("text", data_files=test_txt_files, streaming=True)
 # Load train and test datasets (if each .txt file has one example per line)
-train_dataset = load_dataset("text", data_files=train_txt_files)
-eval_dataset = load_dataset("text", data_files=test_txt_files)
+# train_dataset = load_dataset("text", data_files=train_txt_files)
+# eval_dataset = load_dataset("text", data_files=test_txt_files)
+# Tells "trainer" that "train" is made up of the actual .txt files listed in train_txt_files
+train_dataset = load_dataset("text", data_files={"train": train_txt_files})["train"]
+eval_dataset = load_dataset("text", data_files={"test": test_txt_files})["test"]
 
 # ================== TRAINING STEP ==================
 
