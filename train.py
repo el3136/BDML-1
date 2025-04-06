@@ -63,12 +63,15 @@ tokenizer.padding_side = "left"
 
 # Tokenization function
 def tokenize_function(example):
-    return tokenizer(
+    # Here, we set `labels` to be the same as `input_ids` in causal LLM
+    tokenized = tokenizer(
         example["text"],
         truncation=True,
         padding="max_length",
         max_length=512,  # You can tweak this
     )
+    tokenized["labels"] = tokenized["input_ids"]
+    return tokenized
 
 # Apply tokenization
 train_dataset = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
