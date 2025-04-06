@@ -61,6 +61,19 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "left"
 
+# Tokenization function
+def tokenize_function(example):
+    return tokenizer(
+        example["text"],
+        truncation=True,
+        padding="max_length",
+        max_length=512,  # You can tweak this
+    )
+
+# Apply tokenization
+train_dataset = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
+eval_dataset = eval_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
+
 # Enable gradient checkpointing for memory optimization
 model.gradient_checkpointing_enable()
 
@@ -92,6 +105,7 @@ training_args = TrainingArguments(
     evaluation_strategy="steps",
     eval_steps=100,
     load_best_model_at_end=True,
+    remove_unused_columns=False,  # prevent dropping required PeftModelForCausalLM fields
 )
 
 # Define Trainer
